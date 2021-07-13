@@ -1,15 +1,13 @@
 import React from 'react';
 
-class MovieList extends React.Component {
-
-    render() {
+const MovieList =(props)=>{
 
         return (
             <div className="row">
 
-                {this.props.movies.map((movie) => (
+                {props.movies.map((movie) => (
 
-                    <div className="col-lg-4">
+                    <div className="col-lg-4" key={movie.id}>
 
                         <div className="card mb-4 shadow-sm">
 
@@ -19,7 +17,7 @@ class MovieList extends React.Component {
                                 <p className="card-text"> {movie.overviem}</p>
                                 <div className="d-flex justify-content-between align-items-center">
 
-                                    <button type="button" className="btn btn-md btn-outline-danger">delete</button>
+                                    <button type="button" onClick={(event) => props.deleteMovieProp(movie)} className="btn btn-md btn-outline-danger">delete</button>
                                     <h2><span className="badge badge-info">{movie.rating}</span></h2>
 
                                 </div>
@@ -36,7 +34,7 @@ class MovieList extends React.Component {
             </div>
         )
 
-    }
+    
 }
 
 
