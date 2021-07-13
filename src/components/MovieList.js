@@ -4,28 +4,36 @@ class MovieList extends React.Component {
 
     render() {
 
-        return  (
+        return (
             <div className="row">
-            <div className="col-lg-4">
-                
-            <div className="card mb-4 shadow-sm">
 
-                <img src="https://image.tmdb.org/t/p/w220_and_h330_face/wHa6KOJAoNTFLFtp7wguUJKSnju.jpg" className="card-img-top" alt="Sample Movie"/>
-                 <div className="card-body">
-                    <h5 className="card-title"> Sample Movie</h5>
-                    <p className="card-text"> Sample Nuio</p>
-                    <div className="d-flex justify-content-between align-items-center">
+                {this.props.movies.map((movie) => (
 
-                        <button type="button" className="btn btn-md btn-outline-danger">delete</button>
-                        <h2><span className="badge badge-info">90</span></h2>
+                    <div className="col-lg-4">
+
+                        <div className="card mb-4 shadow-sm">
+
+                            <img src={movie.imageURL} className="card-img-top" alt="Sample Movie" />
+                            <div className="card-body">
+                                <h5 className="card-title">{movie.name}</h5>
+                                <p className="card-text"> {movie.overviem}</p>
+                                <div className="d-flex justify-content-between align-items-center">
+
+                                    <button type="button" className="btn btn-md btn-outline-danger">delete</button>
+                                    <h2><span className="badge badge-info">{movie.rating}</span></h2>
+
+                                </div>
+
+                            </div>
+                        </div>
 
                     </div>
 
-                 </div>
-            </div>
+                ))}
+
+
 
             </div>
-        </div>
         )
 
     }
