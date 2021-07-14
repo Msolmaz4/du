@@ -1,6 +1,15 @@
 import React from 'react';
 import SearchBar from './SearchBar';
 import MovieList from './MovieList';
+import AddMovie from './AddMovies';
+import axios from 'axios';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    
+} from "react-router-dom";
+
 
 class App extends React.Component {
 
@@ -8,33 +17,42 @@ class App extends React.Component {
         movies: [
 
         ],
-        searchQuery:""
+        searchQuery: ""
     }
-    
+
+
     async componentDidMount() {
-        const baseURL ="http://localhost:3002/movies";
-        const response =await  fetch(baseURL);
-        const data =await response.json();
-        this.setState({movies:data})
+        const response = await axios.get("http://localhost:3002/movies");
+        this.setState({ movies: response.data })
+
     }
 
 
-    deleteMovie = (movie) => {
+
+    deleteMovie = async (movie) => {
+        axios.delete(`http://localhost:3002/movies/${movie.id}`)
         const newMovieList = this.state.movies.filter(
             m => m.id !== movie.id
         );
 
-        this.setState ({
-            movies :newMovieList
+        this.setState({
+            movies: newMovieList
         })
     }
 
-    searchMovie=(event)=>{
-      //console.log(event.target.value)
-      this.setState({searchQuery:event.target.value})
+
+
+    searchMovie = (event) => {
+        //console.log(event.target.value)
+        this.setState({ searchQuery: event.target.value })
     }
 
-
+    AddMovie = async (movie) => {
+        await axios.post(`http://localhost:3002/movies/`,movie)
+        this.setState(state=>({
+            movies:state.movies.concat([movie])
+        }))
+    }
 
     render() {
 
@@ -45,17 +63,46 @@ class App extends React.Component {
         )
 
         return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-12">
-                        <SearchBar searchMovieProp={this.searchMovie} />
-                    </div>
-                </div>
+            <Router>
+                <div className="container">
+                < Switch>
+                    <Route path='/'exact render={() => (
+                        <div>
+                            <div className="row">
+                                <div className="col-lg-10">
+                                    <SearchBar searchMovieProp={this.searchMovie} />
+                                </div>
+                                
 
-                <MovieList 
-                 movies={filteredMovies}
-                 deleteMovieProp={this.deleteMovie} />
-            </div>
+                            </div>
+
+                            <MovieList
+                                movies={filteredMovies}
+                                deleteMovieProp={this.deleteMovie} />
+                        </div>
+
+                    )}>
+
+                    </Route>
+                    <Route path="/add" render={({history})=>(
+
+                        <AddMovie 
+                        onAddMovie = {(movie)=>{this.AddMovie(movie)
+                          history.push("/")
+                        }
+                    
+                    }
+
+                        
+                        />
+                    
+                    )}>
+                        
+                        </Route>
+                        
+                        </Switch>
+                </div>
+            </Router>
         )
 
     }
@@ -63,4 +110,4 @@ class App extends React.Component {
 
 }
 
-export default App; 
+export default App;
